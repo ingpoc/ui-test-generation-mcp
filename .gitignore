@@ -1,4 +1,3 @@
-lib/
 node_modules/
 test-results/
 playwright-report/
@@ -7,3 +6,6 @@ playwright-report/
 .DS_Store
 .env
 sessions/
+.claude/
+.mcp.json
+
