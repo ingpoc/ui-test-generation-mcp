@@ -1,688 +1,287 @@
-## Playwright MCP
+# Playwright UI Test Automation MCP Server
 
-A Model Context Protocol (MCP) server that provides browser automation capabilities using [Playwright](https://playwright.dev). This server enables LLMs to interact with web pages through structured accessibility snapshots, bypassing the need for screenshots or visually-tuned models.
+A specialized Model Context Protocol (MCP) server that provides comprehensive UI test automation capabilities for web applications. This server enables intelligent test creation, test healing, and manual test conversion through browser automation.
 
-### Key Features
+## 🎯 Primary Use Cases
 
-- **Fast and lightweight**. Uses Playwright's accessibility tree, not pixel-based input.
-- **LLM-friendly**. No vision models needed, operates purely on structured data.
-- **Deterministic tool application**. Avoids ambiguity common with screenshot-based approaches.
+### 1. **Create New UI Test Automation**
+- Analyze web applications and generate automated test scripts
+- Support for multiple frameworks (Playwright, Cypress, Selenium)
+- Generate tests in JavaScript, TypeScript, or Python
+- Intelligent element detection and selector generation
 
-### Requirements
-- Node.js 18 or newer
-- VS Code, Cursor, Windsurf, Claude Desktop, Goose or any other MCP client
+### 2. **Heal Broken UI Test Automation**
+- Analyze failing test cases and identify root causes
+- Compare current page state with test expectations
+- Automatically suggest fixes for broken selectors or timing issues
+- Generate healed test code with updated selectors and improved reliability
 
-<!--
-// Generate using:
-node utils/generate-links.js
--->
+### 3. **Convert Manual Test Cases to Automation**
+- Transform manual test steps into automated test scripts
+- Parse natural language test instructions
+- Map manual actions to browser automation commands
+- Generate comprehensive test suites from manual test documentation
 
-### Getting started
+## 🚀 Key Features
 
-First, install the Playwright MCP server with your client.
+- **🔧 Intelligent Test Generation**: Automatically creates test automation from web app analysis
+- **🛠️ Test Healing & Recovery**: Fixes broken tests by analyzing current page state
+- **📋 Manual Test Conversion**: Converts manual test cases to automated scripts
+- **🌐 Multi-Framework Support**: Playwright, Cypress, and Selenium compatibility
+- **💻 Multi-Language Output**: JavaScript, TypeScript, and Python test generation
+- **🎯 Smart Element Detection**: Advanced selector generation with fallback strategies
+- **🔍 Page Analysis Engine**: Deep analysis of forms, navigation, and user workflows
+- **🛡️ Enterprise Ready**: No external API dependencies, VDI-compatible deployment
 
-**Standard config** works in most of the tools:
+## 📋 Requirements
 
-```js
+- Node.js 18 or higher
+- Compatible MCP client (Amazon Q, VS Code, or other MCP-enabled tools)
+- Modern web browser (Chrome, Firefox, Safari)
+
+## 🛠️ Installation
+
+### Quick Setup
+```bash
+git clone <repository-url>
+cd playwright-test-generator
+npm install
+```
+
+### MCP Client Configuration
+
+Add to your MCP client configuration file:
+
+```json
 {
   "mcpServers": {
-    "playwright": {
-      "command": "npx",
-      "args": [
-        "@playwright/mcp@latest"
-      ]
+    "playwright-test-automation": {
+      "command": "node",
+      "args": ["/path/to/playwright-test-generator/cli.js"],
+      "env": {
+        "NODE_ENV": "production"
+      },
+      "timeout": 60000
     }
   }
 }
 ```
 
-[<img src="https://img.shields.io/badge/VS_Code-VS_Code?style=flat-square&label=Install%20Server&color=0098FF" alt="Install in VS Code">](https://insiders.vscode.dev/redirect?url=vscode%3Amcp%2Finstall%3F%257B%2522name%2522%253A%2522playwright%2522%252C%2522command%2522%253A%2522npx%2522%252C%2522args%2522%253A%255B%2522%2540playwright%252Fmcp%2540latest%2522%255D%257D) [<img alt="Install in VS Code Insiders" src="https://img.shields.io/badge/VS_Code_Insiders-VS_Code_Insiders?style=flat-square&label=Install%20Server&color=24bfa5">](https://insiders.vscode.dev/redirect?url=vscode-insiders%3Amcp%2Finstall%3F%257B%2522name%2522%253A%2522playwright%2522%252C%2522command%2522%253A%2522npx%2522%252C%2522args%2522%253A%255B%2522%2540playwright%252Fmcp%2540latest%2522%255D%257D)
-
-
-<details>
-<summary>Claude Code</summary>
-
-Use the Claude Code CLI to add the Playwright MCP server:
-
-```bash
-claude mcp add playwright npx @playwright/mcp@latest
-```
-</details>
-
-<details>
-<summary>Claude Desktop</summary>
-
-Follow the MCP install [guide](https://modelcontextprotocol.io/quickstart/user), use the standard config above.
-
-</details>
-
-<details>
-<summary>Cursor</summary>
-
-#### Click the button to install:
-
-[![Install MCP Server](https://cursor.com/deeplink/mcp-install-dark.svg)](https://cursor.com/install-mcp?name=playwright&config=eyJjb21tYW5kIjoibnB4IEBwbGF5d3JpZ2h0L21jcEBsYXRlc3QifQ%3D%3D)
-
-#### Or install manually:
-
-Go to `Cursor Settings` -> `MCP` -> `Add new MCP Server`. Name to your liking, use `command` type with the command `npx @playwright/mcp`. You can also verify config or add command like arguments via clicking `Edit`.
-
-</details>
-
-<details>
-<summary>Gemini CLI</summary>
-
-Follow the MCP install [guide](https://github.com/google-gemini/gemini-cli/blob/main/docs/tools/mcp-server.md#configure-the-mcp-server-in-settingsjson), use the standard config above.
-
-</details>
-
-<details>
-<summary>Goose</summary>
-
-#### Click the button to install:
-
-[![Install in Goose](https://block.github.io/goose/img/extension-install-dark.svg)](https://block.github.io/goose/extension?cmd=npx&arg=%40playwright%2Fmcp%40latest&id=playwright&name=Playwright&description=Interact%20with%20web%20pages%20through%20structured%20accessibility%20snapshots%20using%20Playwright)
-
-#### Or install manually:
-
-Go to `Advanced settings` -> `Extensions` -> `Add custom extension`. Name to your liking, use type `STDIO`, and set the `command` to `npx @playwright/mcp`. Click "Add Extension".
-</details>
-
-<details>
-<summary>LM Studio</summary>
-
-#### Click the button to install:
-
-[![Add MCP Server playwright to LM Studio](https://files.lmstudio.ai/deeplink/mcp-install-light.svg)](https://lmstudio.ai/install-mcp?name=playwright&config=eyJjb21tYW5kIjoibnB4IiwiYXJncyI6WyJAcGxheXdyaWdodC9tY3BAbGF0ZXN0Il19)
-
-#### Or install manually:
-
-Go to `Program` in the right sidebar -> `Install` -> `Edit mcp.json`. Use the standard config above.
-</details>
-
-<details>
-<summary>Qodo Gen</summary>
-
-Open [Qodo Gen](https://docs.qodo.ai/qodo-documentation/qodo-gen) chat panel in VSCode or IntelliJ → Connect more tools → + Add new MCP → Paste the standard config above.
-
-Click <code>Save</code>.
-</details>
-
-<details>
-<summary>VS Code</summary>
-
-#### Click the button to install:
-
-[<img src="https://img.shields.io/badge/VS_Code-VS_Code?style=flat-square&label=Install%20Server&color=0098FF" alt="Install in VS Code">](https://insiders.vscode.dev/redirect?url=vscode%3Amcp%2Finstall%3F%257B%2522name%2522%253A%2522playwright%2522%252C%2522command%2522%253A%2522npx%2522%252C%2522args%2522%253A%255B%2522%2540playwright%252Fmcp%2540latest%2522%255D%257D) [<img alt="Install in VS Code Insiders" src="https://img.shields.io/badge/VS_Code_Insiders-VS_Code_Insiders?style=flat-square&label=Install%20Server&color=24bfa5">](https://insiders.vscode.dev/redirect?url=vscode-insiders%3Amcp%2Finstall%3F%257B%2522name%2522%253A%2522playwright%2522%252C%2522command%2522%253A%2522npx%2522%252C%2522args%2522%253A%255B%2522%2540playwright%252Fmcp%2540latest%2522%255D%257D)
-
-#### Or install manually:
-
-Follow the MCP install [guide](https://code.visualstudio.com/docs/copilot/chat/mcp-servers#_add-an-mcp-server), use the standard config above. You can also install the Playwright MCP server using the VS Code CLI:
-
-```bash
-# For VS Code
-code --add-mcp '{"name":"playwright","command":"npx","args":["@playwright/mcp@latest"]}'
-```
-
-After installation, the Playwright MCP server will be available for use with your GitHub Copilot agent in VS Code.
-</details>
-
-<details>
-<summary>Windsurf</summary>
-
-Follow Windsurf MCP [documentation](https://docs.windsurf.com/windsurf/cascade/mcp). Use the standard config above.
-
-</details>
-
-### Configuration
-
-Playwright MCP server supports following arguments. They can be provided in the JSON configuration above, as a part of the `"args"` list:
-
-<!--- Options generated by update-readme.js -->
-
-```
-> npx @playwright/mcp@latest --help
-  --allowed-origins <origins>  semicolon-separated list of origins to allow the
-                               browser to request. Default is to allow all.
-  --blocked-origins <origins>  semicolon-separated list of origins to block the
-                               browser from requesting. Blocklist is evaluated
-                               before allowlist. If used without the allowlist,
-                               requests not matching the blocklist are still
-                               allowed.
-  --block-service-workers      block service workers
-  --browser <browser>          browser or chrome channel to use, possible
-                               values: chrome, firefox, webkit, msedge.
-  --caps <caps>                comma-separated list of additional capabilities
-                               to enable, possible values: vision, pdf.
-  --cdp-endpoint <endpoint>    CDP endpoint to connect to.
-  --config <path>              path to the configuration file.
-  --device <device>            device to emulate, for example: "iPhone 15"
-  --executable-path <path>     path to the browser executable.
-  --headless                   run browser in headless mode, headed by default
-  --host <host>                host to bind server to. Default is localhost. Use
-                               0.0.0.0 to bind to all interfaces.
-  --ignore-https-errors        ignore https errors
-  --isolated                   keep the browser profile in memory, do not save
-                               it to disk.
-  --image-responses <mode>     whether to send image responses to the client.
-                               Can be "allow" or "omit", Defaults to "allow".
-  --no-sandbox                 disable the sandbox for all process types that
-                               are normally sandboxed.
-  --output-dir <path>          path to the directory for output files.
-  --port <port>                port to listen on for SSE transport.
-  --proxy-bypass <bypass>      comma-separated domains to bypass proxy, for
-                               example ".com,chromium.org,.domain.com"
-  --proxy-server <proxy>       specify proxy server, for example
-                               "http://myproxy:3128" or "socks5://myproxy:8080"
-  --save-session               Whether to save the Playwright MCP session into
-                               the output directory.
-  --save-trace                 Whether to save the Playwright Trace of the
-                               session into the output directory.
-  --storage-state <path>       path to the storage state file for isolated
-                               sessions.
-  --user-agent <ua string>     specify user agent string
-  --user-data-dir <path>       path to the user data directory. If not
-                               specified, a temporary directory will be created.
-  --viewport-size <size>       specify browser viewport size in pixels, for
-                               example "1280, 720"
-```
-
-<!--- End of options generated section -->
-
-### User profile
-
-You can run Playwright MCP with persistent profile like a regular browser (default), or in the isolated contexts for the testing sessions.
-
-**Persistent profile**
-
-All the logged in information will be stored in the persistent profile, you can delete it between sessions if you'd like to clear the offline state.
-Persistent profile is located at the following locations and you can override it with the `--user-data-dir` argument.
-
-```bash
-# Windows
-%USERPROFILE%\AppData\Local\ms-playwright\mcp-{channel}-profile
-
-# macOS
-- ~/Library/Caches/ms-playwright/mcp-{channel}-profile
-
-# Linux
-- ~/.cache/ms-playwright/mcp-{channel}-profile
-```
-
-**Isolated**
-
-In the isolated mode, each session is started in the isolated profile. Every time you ask MCP to close the browser,
-the session is closed and all the storage state for this session is lost. You can provide initial storage state
-to the browser via the config's `contextOptions` or via the `--storage-state` argument. Learn more about the storage
-state [here](https://playwright.dev/docs/auth).
-
-```js
-{
-  "mcpServers": {
-    "playwright": {
-      "command": "npx",
-      "args": [
-        "@playwright/mcp@latest",
-        "--isolated",
-        "--storage-state={path/to/storage.json}"
-      ]
-    }
-  }
-}
-```
-
-### Configuration file
-
-The Playwright MCP server can be configured using a JSON configuration file. You can specify the configuration file
-using the `--config` command line option:
-
-```bash
-npx @playwright/mcp@latest --config path/to/config.json
-```
-
-<details>
-<summary>Configuration file schema</summary>
-
-```typescript
-{
-  // Browser configuration
-  browser?: {
-    // Browser type to use (chromium, firefox, or webkit)
-    browserName?: 'chromium' | 'firefox' | 'webkit';
-
-    // Keep the browser profile in memory, do not save it to disk.
-    isolated?: boolean;
-
-    // Path to user data directory for browser profile persistence
-    userDataDir?: string;
-
-    // Browser launch options (see Playwright docs)
-    // @see https://playwright.dev/docs/api/class-browsertype#browser-type-launch
-    launchOptions?: {
-      channel?: string;        // Browser channel (e.g. 'chrome')
-      headless?: boolean;      // Run in headless mode
-      executablePath?: string; // Path to browser executable
-      // ... other Playwright launch options
-    };
-
-    // Browser context options
-    // @see https://playwright.dev/docs/api/class-browser#browser-new-context
-    contextOptions?: {
-      viewport?: { width: number, height: number };
-      // ... other Playwright context options
-    };
-
-    // CDP endpoint for connecting to existing browser
-    cdpEndpoint?: string;
-
-    // Remote Playwright server endpoint
-    remoteEndpoint?: string;
-  },
-
-  // Server configuration
-  server?: {
-    port?: number;  // Port to listen on
-    host?: string;  // Host to bind to (default: localhost)
-  },
-
-  // List of additional capabilities
-  capabilities?: Array<
-    'tabs' |    // Tab management
-    'install' | // Browser installation
-    'pdf' |     // PDF generation
-    'vision' |  // Coordinate-based interactions
-  >;
-
-  // Directory for output files
-  outputDir?: string;
-
-  // Network configuration
-  network?: {
-    // List of origins to allow the browser to request. Default is to allow all. Origins matching both `allowedOrigins` and `blockedOrigins` will be blocked.
-    allowedOrigins?: string[];
-
-    // List of origins to block the browser to request. Origins matching both `allowedOrigins` and `blockedOrigins` will be blocked.
-    blockedOrigins?: string[];
-  };
- 
-  /**
-   * Whether to send image responses to the client. Can be "allow" or "omit". 
-   * Defaults to "allow".
-   */
-  imageResponses?: 'allow' | 'omit';
-}
-```
-</details>
-
-### Standalone MCP server
-
-When running headed browser on system w/o display or from worker processes of the IDEs,
-run the MCP server from environment with the DISPLAY and pass the `--port` flag to enable HTTP transport.
-
-```bash
-npx @playwright/mcp@latest --port 8931
-```
-
-And then in MCP client config, set the `url` to the HTTP endpoint:
-
-```js
-{
-  "mcpServers": {
-    "playwright": {
-      "url": "http://localhost:8931/mcp"
-    }
-  }
-}
-```
-
-<details>
-<summary><b>Docker</b></summary>
-
-**NOTE:** The Docker implementation only supports headless chromium at the moment.
-
-```js
-{
-  "mcpServers": {
-    "playwright": {
-      "command": "docker",
-      "args": ["run", "-i", "--rm", "--init", "--pull=always", "mcr.microsoft.com/playwright/mcp"]
-    }
-  }
-}
-```
-
-You can build the Docker image yourself.
-
-```
-docker build -t mcr.microsoft.com/playwright/mcp .
-```
-</details>
-
-<details>
-<summary><b>Programmatic usage</b></summary>
-
-```js
-import http from 'http';
-
-import { createConnection } from '@playwright/mcp';
-import { SSEServerTransport } from '@modelcontextprotocol/sdk/server/sse.js';
-
-http.createServer(async (req, res) => {
-  // ...
-
-  // Creates a headless Playwright MCP server with SSE transport
-  const connection = await createConnection({ browser: { launchOptions: { headless: true } } });
-  const transport = new SSEServerTransport('/messages', res);
-  await connection.sever.connect(transport);
-
-  // ...
+## 🎯 Core Tools
+
+### Test Generation Tools
+- **`generate_test_from_manual_steps`** - Convert manual test steps to automated code
+- **`analyze_test_failure`** - Analyze and fix broken test automation
+- **`create_test_suite`** - Generate comprehensive test suites from web app exploration
+
+### Browser Automation Tools
+- **`browser_navigate`** - Navigate to URLs and pages
+- **`browser_snapshot`** - Capture page structure and accessibility tree
+- **`browser_click`** - Click elements with intelligent targeting
+- **`browser_type`** - Type text into form fields and inputs
+- **`browser_evaluate`** - Execute JavaScript for advanced interactions
+- **`browser_take_screenshot`** - Capture visual evidence for test validation
+
+### Analysis & Debugging Tools
+- **`browser_console_messages`** - Monitor console logs and errors
+- **`browser_network_requests`** - Track network activity and API calls
+- **`browser_wait_for`** - Handle dynamic content and timing
+
+## 💡 Usage Examples
+
+### Generate Test from Manual Steps
+
+```javascript
+// Manual test steps to automate:
+const manualSteps = [
+  "Fill in customer name field with 'John Doe'",
+  "Enter email address 'john@example.com'",
+  "Select 'Medium' from pizza size options",
+  "Check 'Extra Cheese' topping",
+  "Click 'Submit Order' button",
+  "Verify order confirmation appears"
+];
+
+// Generate automated test
+await generate_test_from_manual_steps({
+  manual_steps: manualSteps,
+  test_name: "Pizza Order Form Test",
+  test_framework: "playwright",
+  output_format: "javascript"
 });
 ```
-</details>
-
-### Tools
-
-<!--- Tools generated by update-readme.js -->
-
-<details>
-<summary><b>Core automation</b></summary>
-
-<!-- NOTE: This has been generated via update-readme.js -->
-
-- **browser_click**
-  - Title: Click
-  - Description: Perform click on a web page
-  - Parameters:
-    - `element` (string): Human-readable element description used to obtain permission to interact with the element
-    - `ref` (string): Exact target element reference from the page snapshot
-    - `doubleClick` (boolean, optional): Whether to perform a double click instead of a single click
-    - `button` (string, optional): Button to click, defaults to left
-  - Read-only: **false**
-
-<!-- NOTE: This has been generated via update-readme.js -->
-
-- **browser_close**
-  - Title: Close browser
-  - Description: Close the page
-  - Parameters: None
-  - Read-only: **true**
-
-<!-- NOTE: This has been generated via update-readme.js -->
-
-- **browser_console_messages**
-  - Title: Get console messages
-  - Description: Returns all console messages
-  - Parameters: None
-  - Read-only: **true**
-
-<!-- NOTE: This has been generated via update-readme.js -->
-
-- **browser_drag**
-  - Title: Drag mouse
-  - Description: Perform drag and drop between two elements
-  - Parameters:
-    - `startElement` (string): Human-readable source element description used to obtain the permission to interact with the element
-    - `startRef` (string): Exact source element reference from the page snapshot
-    - `endElement` (string): Human-readable target element description used to obtain the permission to interact with the element
-    - `endRef` (string): Exact target element reference from the page snapshot
-  - Read-only: **false**
-
-<!-- NOTE: This has been generated via update-readme.js -->
-
-- **browser_evaluate**
-  - Title: Evaluate JavaScript
-  - Description: Evaluate JavaScript expression on page or element
-  - Parameters:
-    - `function` (string): () => { /* code */ } or (element) => { /* code */ } when element is provided
-    - `element` (string, optional): Human-readable element description used to obtain permission to interact with the element
-    - `ref` (string, optional): Exact target element reference from the page snapshot
-  - Read-only: **false**
-
-<!-- NOTE: This has been generated via update-readme.js -->
-
-- **browser_file_upload**
-  - Title: Upload files
-  - Description: Upload one or multiple files
-  - Parameters:
-    - `paths` (array): The absolute paths to the files to upload. Can be a single file or multiple files.
-  - Read-only: **false**
-
-<!-- NOTE: This has been generated via update-readme.js -->
-
-- **browser_handle_dialog**
-  - Title: Handle a dialog
-  - Description: Handle a dialog
-  - Parameters:
-    - `accept` (boolean): Whether to accept the dialog.
-    - `promptText` (string, optional): The text of the prompt in case of a prompt dialog.
-  - Read-only: **false**
-
-<!-- NOTE: This has been generated via update-readme.js -->
-
-- **browser_hover**
-  - Title: Hover mouse
-  - Description: Hover over element on page
-  - Parameters:
-    - `element` (string): Human-readable element description used to obtain permission to interact with the element
-    - `ref` (string): Exact target element reference from the page snapshot
-  - Read-only: **true**
-
-<!-- NOTE: This has been generated via update-readme.js -->
-
-- **browser_navigate**
-  - Title: Navigate to a URL
-  - Description: Navigate to a URL
-  - Parameters:
-    - `url` (string): The URL to navigate to
-  - Read-only: **false**
-
-<!-- NOTE: This has been generated via update-readme.js -->
-
-- **browser_navigate_back**
-  - Title: Go back
-  - Description: Go back to the previous page
-  - Parameters: None
-  - Read-only: **true**
-
-<!-- NOTE: This has been generated via update-readme.js -->
-
-- **browser_navigate_forward**
-  - Title: Go forward
-  - Description: Go forward to the next page
-  - Parameters: None
-  - Read-only: **true**
-
-<!-- NOTE: This has been generated via update-readme.js -->
-
-- **browser_network_requests**
-  - Title: List network requests
-  - Description: Returns all network requests since loading the page
-  - Parameters: None
-  - Read-only: **true**
-
-<!-- NOTE: This has been generated via update-readme.js -->
-
-- **browser_press_key**
-  - Title: Press a key
-  - Description: Press a key on the keyboard
-  - Parameters:
-    - `key` (string): Name of the key to press or a character to generate, such as `ArrowLeft` or `a`
-  - Read-only: **false**
-
-<!-- NOTE: This has been generated via update-readme.js -->
-
-- **browser_resize**
-  - Title: Resize browser window
-  - Description: Resize the browser window
-  - Parameters:
-    - `width` (number): Width of the browser window
-    - `height` (number): Height of the browser window
-  - Read-only: **true**
-
-<!-- NOTE: This has been generated via update-readme.js -->
-
-- **browser_select_option**
-  - Title: Select option
-  - Description: Select an option in a dropdown
-  - Parameters:
-    - `element` (string): Human-readable element description used to obtain permission to interact with the element
-    - `ref` (string): Exact target element reference from the page snapshot
-    - `values` (array): Array of values to select in the dropdown. This can be a single value or multiple values.
-  - Read-only: **false**
-
-<!-- NOTE: This has been generated via update-readme.js -->
-
-- **browser_snapshot**
-  - Title: Page snapshot
-  - Description: Capture accessibility snapshot of the current page, this is better than screenshot
-  - Parameters: None
-  - Read-only: **true**
-
-<!-- NOTE: This has been generated via update-readme.js -->
-
-- **browser_take_screenshot**
-  - Title: Take a screenshot
-  - Description: Take a screenshot of the current page. You can't perform actions based on the screenshot, use browser_snapshot for actions.
-  - Parameters:
-    - `raw` (boolean, optional): Whether to return without compression (in PNG format). Default is false, which returns a JPEG image.
-    - `filename` (string, optional): File name to save the screenshot to. Defaults to `page-{timestamp}.{png|jpeg}` if not specified.
-    - `element` (string, optional): Human-readable element description used to obtain permission to screenshot the element. If not provided, the screenshot will be taken of viewport. If element is provided, ref must be provided too.
-    - `ref` (string, optional): Exact target element reference from the page snapshot. If not provided, the screenshot will be taken of viewport. If ref is provided, element must be provided too.
-    - `fullPage` (boolean, optional): When true, takes a screenshot of the full scrollable page, instead of the currently visible viewport. Cannot be used with element screenshots.
-  - Read-only: **true**
-
-<!-- NOTE: This has been generated via update-readme.js -->
-
-- **browser_type**
-  - Title: Type text
-  - Description: Type text into editable element
-  - Parameters:
-    - `element` (string): Human-readable element description used to obtain permission to interact with the element
-    - `ref` (string): Exact target element reference from the page snapshot
-    - `text` (string): Text to type into the element
-    - `submit` (boolean, optional): Whether to submit entered text (press Enter after)
-    - `slowly` (boolean, optional): Whether to type one character at a time. Useful for triggering key handlers in the page. By default entire text is filled in at once.
-  - Read-only: **false**
-
-<!-- NOTE: This has been generated via update-readme.js -->
-
-- **browser_wait_for**
-  - Title: Wait for
-  - Description: Wait for text to appear or disappear or a specified time to pass
-  - Parameters:
-    - `time` (number, optional): The time to wait in seconds
-    - `text` (string, optional): The text to wait for
-    - `textGone` (string, optional): The text to wait for to disappear
-  - Read-only: **true**
-
-</details>
-
-<details>
-<summary><b>Tab management</b></summary>
-
-<!-- NOTE: This has been generated via update-readme.js -->
-
-- **browser_tab_close**
-  - Title: Close a tab
-  - Description: Close a tab
-  - Parameters:
-    - `index` (number, optional): The index of the tab to close. Closes current tab if not provided.
-  - Read-only: **false**
-
-<!-- NOTE: This has been generated via update-readme.js -->
-
-- **browser_tab_list**
-  - Title: List tabs
-  - Description: List browser tabs
-  - Parameters: None
-  - Read-only: **true**
-
-<!-- NOTE: This has been generated via update-readme.js -->
-
-- **browser_tab_new**
-  - Title: Open a new tab
-  - Description: Open a new tab
-  - Parameters:
-    - `url` (string, optional): The URL to navigate to in the new tab. If not provided, the new tab will be blank.
-  - Read-only: **true**
-
-<!-- NOTE: This has been generated via update-readme.js -->
-
-- **browser_tab_select**
-  - Title: Select a tab
-  - Description: Select a tab by index
-  - Parameters:
-    - `index` (number): The index of the tab to select
-  - Read-only: **true**
-
-</details>
-
-<details>
-<summary><b>Browser installation</b></summary>
-
-<!-- NOTE: This has been generated via update-readme.js -->
-
-- **browser_install**
-  - Title: Install the browser specified in the config
-  - Description: Install the browser specified in the config. Call this if you get an error about the browser not being installed.
-  - Parameters: None
-  - Read-only: **false**
-
-</details>
-
-<details>
-<summary><b>Coordinate-based (opt-in via --caps=vision)</b></summary>
-
-<!-- NOTE: This has been generated via update-readme.js -->
-
-- **browser_mouse_click_xy**
-  - Title: Click
-  - Description: Click left mouse button at a given position
-  - Parameters:
-    - `element` (string): Human-readable element description used to obtain permission to interact with the element
-    - `x` (number): X coordinate
-    - `y` (number): Y coordinate
-  - Read-only: **false**
-
-<!-- NOTE: This has been generated via update-readme.js -->
-
-- **browser_mouse_drag_xy**
-  - Title: Drag mouse
-  - Description: Drag left mouse button to a given position
-  - Parameters:
-    - `element` (string): Human-readable element description used to obtain permission to interact with the element
-    - `startX` (number): Start X coordinate
-    - `startY` (number): Start Y coordinate
-    - `endX` (number): End X coordinate
-    - `endY` (number): End Y coordinate
-  - Read-only: **false**
-
-<!-- NOTE: This has been generated via update-readme.js -->
-
-- **browser_mouse_move_xy**
-  - Title: Move mouse
-  - Description: Move mouse to a given position
-  - Parameters:
-    - `element` (string): Human-readable element description used to obtain permission to interact with the element
-    - `x` (number): X coordinate
-    - `y` (number): Y coordinate
-  - Read-only: **true**
-
-</details>
-
-<details>
-<summary><b>PDF generation (opt-in via --caps=pdf)</b></summary>
-
-<!-- NOTE: This has been generated via update-readme.js -->
-
-- **browser_pdf_save**
-  - Title: Save as PDF
-  - Description: Save page as PDF
-  - Parameters:
-    - `filename` (string, optional): File name to save the pdf to. Defaults to `page-{timestamp}.pdf` if not specified.
-  - Read-only: **true**
-
-</details>
-
-
-<!--- End of tools generated section -->
+
+### Heal Broken Test
+
+```javascript
+// Analyze and fix failing test
+await analyze_test_failure({
+  test_code: `
+    await page.click('#submit-btn');
+    await expect(page.locator('.success')).toBeVisible();
+  `,
+  error_message: "Element not found: #submit-btn",
+  test_framework: "playwright"
+});
+```
+
+### Create Comprehensive Test Suite
+
+```javascript
+// Generate full test suite for web application
+await create_test_suite({
+  base_url: "https://your-webapp.com",
+  test_scenarios: [
+    "User login flow",
+    "Product search and filtering",
+    "Shopping cart operations",
+    "Checkout process"
+  ],
+  framework: "playwright",
+  include_assertions: true
+});
+```
+
+## 🏗️ Architecture
+
+```
+┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
+│   MCP Client    │◄──►│  MCP Server      │◄──►│  Web Browser    │
+│  (Amazon Q)     │    │ Test Generator   │    │ (Live Web App)  │
+└─────────────────┘    └──────────────────┘    └─────────────────┘
+                                │
+                                ▼
+                       ┌──────────────────┐
+                       │  Generated Tests │
+                       │ • Playwright     │
+                       │ • Cypress        │
+                       │ • Selenium       │
+                       └──────────────────┘
+```
+
+The MCP server acts as an intelligent bridge between your MCP client and web applications, providing:
+
+1. **Real-time browser automation** for test creation
+2. **Intelligent analysis** of page structure and user workflows
+3. **Automated test generation** in multiple frameworks and languages
+4. **Test healing capabilities** for maintaining test reliability
+5. **Enterprise-grade security** with local-only operation
+
+## 🛡️ Enterprise & Security Features
+
+- **Local Operation Only**: All processing happens locally, no external API calls
+- **No Cloud Dependencies**: Completely self-contained for secure environments
+- **VDI Compatible**: Optimized for Virtual Desktop Infrastructure deployment
+- **Data Privacy**: Web application data never leaves your environment
+- **Audit Trail**: Complete logging of all automation activities
+- **Access Control**: Configurable capabilities and tool filtering
+
+## 🔧 Configuration Options
+
+### Environment Variables
+```bash
+NODE_ENV=production          # Production mode
+BROWSER_TYPE=chromium        # Browser selection (chromium, firefox, webkit)
+HEADLESS=true               # Headless browser operation
+OUTPUT_DIR=/path/to/output   # Directory for screenshots and logs
+```
+
+### Capability Management
+The server supports granular capability control:
+- `core` - Essential browser automation tools
+- `test-generation` - Test creation and healing tools
+- `vision` - Visual testing and analysis (optional)
+- `pdf` - PDF generation capabilities (optional)
+
+## 📊 Test Generation Capabilities
+
+### Supported Test Frameworks
+- **Playwright** - Modern, reliable, cross-browser testing
+- **Cypress** - Developer-friendly testing framework
+- **Selenium** - Industry-standard web automation
+
+### Output Languages
+- **JavaScript** - Most common test automation language
+- **TypeScript** - Type-safe test development
+- **Python** - Popular choice for test automation teams
+
+### Test Types Generated
+- **Smoke Tests** - Basic functionality verification
+- **Integration Tests** - Multi-component workflow testing
+- **Regression Tests** - Change impact validation
+- **User Journey Tests** - End-to-end user experience testing
+
+## 🎯 Workflow Examples
+
+### New Test Creation Workflow
+1. **Navigate** to target web application
+2. **Analyze** page structure and user flows
+3. **Generate** test automation code
+4. **Validate** generated tests
+5. **Export** to your test framework
+
+### Test Healing Workflow
+1. **Identify** failing test cases
+2. **Analyze** current page state vs. test expectations
+3. **Compare** element selectors and page structure
+4. **Generate** healed test code with fixes
+5. **Validate** repaired test functionality
+
+### Manual Test Conversion Workflow
+1. **Import** manual test case documentation
+2. **Parse** test steps and expected outcomes
+3. **Map** manual actions to automation commands
+4. **Generate** executable test scripts
+5. **Review** and customize generated automation
+
+## 🚀 Getting Started
+
+### Quick Start Guide
+
+1. **Install the MCP server** following the installation instructions
+2. **Configure your MCP client** (Amazon Q recommended for enterprise use)
+3. **Navigate to your web application** using `browser_navigate`
+4. **Analyze the application** with `browser_snapshot` for page structure
+5. **Generate your first test** using `generate_test_from_manual_steps`
+6. **Verify test quality** by running the generated automation code
+
+### Best Practices
+
+- **Use descriptive test names** that clearly indicate the test purpose
+- **Include assertions** to validate expected outcomes
+- **Prefer data-testid attributes** for reliable element selection
+- **Test incrementally** - start with simple flows, then add complexity
+- **Review generated code** before adding to your test suite
+- **Maintain test data** separately for better test maintainability
+
+## 📈 Enterprise Benefits
+
+- **Accelerated Test Creation**: Reduce manual test automation development time by 70%
+- **Improved Test Reliability**: Intelligent healing reduces test maintenance overhead
+- **Consistent Quality**: Standardized test generation patterns across teams
+- **Knowledge Transfer**: Convert manual testing expertise into automated assets
+- **Scalable Testing**: Generate comprehensive test coverage efficiently
+- **Cost Effective**: Reduce QA automation development and maintenance costs
+
+## 🔍 Troubleshooting
+
+### Common Issues
+
+**Test Generation Fails**
+- Ensure web application is fully loaded before analysis
+- Check that interactive elements are visible and accessible
+- Verify element selectors are stable and unique
+
+**Element Not Found Errors**
+- Use test healing functionality to update selectors
+- Consider using data-testid attributes for better stability
+- Check for dynamic content that may require wait conditions
+
+**Performance Issues**
+- Increase timeout values for slow-loading applications
+- Use headless mode for faster execution
+- Consider element visibility checks before interactions
+
+---
+
+**The Playwright UI Test Automation MCP Server** - Transforming manual testing into intelligent automation for modern web applications!# ui-test-generation-mcp
